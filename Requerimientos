@@ -1,0 +1,26 @@
+# Sistema de Gestión de Inventario y Clientes (SGIC) - Ruedas de Oro
+
+## 1. Definición de Estructuras de Datos (Structs)
+[cite_start]Para poder persistir la información en archivos[cite: 20], primero se deben definir las estructuras base que representarán las entidades del negocio:
+* [cite_start]**Vehiculo:** Debe contener atributos como ID, marca, modelo, tipo (sedán, camioneta, etc.), estado (nuevo/usado), precio y un indicador de disponibilidad (ej. `int disponible;` donde 1 es sí y 0 es no)[cite: 10, 12].
+* [cite_start]**Cliente/Venta:** Estructura para registrar los datos del comprador (nombre, edad) y el ID del vehículo adquirido para formalizar la transacción[cite: 17, 18].
+
+## 2. Módulo de Gestión de Inventario
+[cite_start]El sistema debe permitir a la gerencia y al personal manejar el catálogo de vehículos[cite: 14]:
+* **Agregar Vehículos:** Funcionalidad para registrar un nuevo auto en el sistema y agregarlo (hacer *append*) al archivo correspondiente.
+* [cite_start]**Consultar Disponibilidad General:** Leer el archivo de vehículos y listar todos aquellos cuyo estado sea "disponible", para que el vendedor pueda mostrar la oferta completa si el cliente lo requiere[cite: 12].
+
+## 3. Módulo de Búsqueda y Filtrado Multicriterio
+[cite_start]Esta es la funcionalidad clave para resolver casos como el de Rubén[cite: 16, 17]. El programa debe poder iterar sobre los registros del archivo y mostrar únicamente los vehículos que cumplan con **todos** los filtros ingresados por el usuario:
+* [cite_start]Filtrar por **Marca** (ej. Chevrolet)[cite: 17].
+* [cite_start]Filtrar por **Tipo** (ej. Camioneta)[cite: 17].
+* [cite_start]Filtrar por **Estado** (ej. Usado)[cite: 17].
+* [cite_start]Filtrar por **Presupuesto Máximo** (ej. Precio <= $14.000,00)[cite: 17].
+
+## 4. Módulo de Gestión de Ventas
+[cite_start]Una vez que el cliente selecciona un vehículo, el sistema debe ejecutar la transacción[cite: 18]:
+* [cite_start]**Registrar la Venta:** Solicitar los datos del cliente y crear un registro de venta que se guarde en un archivo de historial de transacciones[cite: 18, 20].
+* [cite_start]**Actualizar el Inventario:** Esta es la parte más importante para evitar inconsistencias[cite: 12]. El sistema debe buscar el vehículo vendido en el archivo original, cambiar su estado a "no disponible" (o "vendido") y **sobrescribir** ese registro específico en el archivo utilizando `fseek` y `fwrite`.
+
+## 5. Módulo de Persistencia
+* [cite_start]**Carga y Guardado Automático:** Toda la información manejada por las funcionalidades anteriores debe leerse y escribirse directamente en archivos (preferiblemente binarios como `.dat` o `.bin` para facilitar el uso de structs)[cite: 20]. Esto garantiza que si el programa se cierra, el inventario y las ventas sigan ahí la próxima vez que se ejecute.
